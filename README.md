@@ -1,1 +1,1 @@
-#Sistema de Administración Escolar by Procastinadores
+# Sistema de Administración Escolar by Procastinadores
