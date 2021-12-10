@@ -1,3 +1,5 @@
+package main.java;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -43,6 +45,7 @@ public class SAEP {
         }
     }
 
+    //This method is only used by teacher and not by chief
     public void uploadNotes() {
         Scanner in = new Scanner(System.in);
         String filepath;
@@ -55,10 +58,13 @@ public class SAEP {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        //SIGN FILE WITH THE DATA OF THE USER TOO
-        //CREATE DATA INSTANCE WITH THE FILE BYTES AND THE SIGNATURE
         Data data = new Data();
         data.setData(fileBytes);
+        data.setId(user.getId());
+        //SIGN FILE WITH THE DATA OF THE USER TOO.
+        data.setSignatureTeacher(new DigitalSignature().sign(data));
+        //CREATE DATA INSTANCE WITH THE FILE BYTES AND THE SIGNATURE
+
         //SEND DATA VIA SOCKET
     }
 
