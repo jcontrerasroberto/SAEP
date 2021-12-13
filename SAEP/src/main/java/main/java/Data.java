@@ -7,8 +7,7 @@ public class Data {
     Object data;
     String id;
 
-    public Data() {
-    }
+    public Data() {}
 
     public byte[] getSignatureTeacher() {
         return signatureTeacher;
@@ -21,13 +20,11 @@ public class Data {
     public void setSignatureChief(byte[] signatureChief) { this.signatureChief = signatureChief; }
 
     public String getId() { return id; }
-
     public void setId(String id) { this.id = id; }
 
     public Object getData() {
         return data;
     }
-
     public void setData(Object data) {
         this.data = data;
     }
