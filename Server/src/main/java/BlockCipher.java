@@ -6,7 +6,6 @@ import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
-import java.util.Arrays;
 import java.util.Base64;
 import java.util.Scanner;
 import javax.crypto.*;
@@ -21,7 +20,6 @@ public class BlockCipher {
         String dirActual = "CipherThings";
         Path path = Paths.get("");
         String directoryName = path.toAbsolutePath().toString();
-
         directoryName+="\\"+dirActual+"\\"+"generated.key";
 
         try {
@@ -41,7 +39,6 @@ public class BlockCipher {
         String dirActual = "CipherThings";
         Path path = Paths.get("");
         String directoryName = path.toAbsolutePath().toString();
-
         directoryName+="\\"+dirActual+"\\"+"generated.key";
 
         byte[] source = Files.readAllBytes(Path.of(directoryName));
@@ -62,13 +59,17 @@ public class BlockCipher {
         }
     }
 
-    public static byte[] createIV() {
+    static byte[] createIV() {
         SecureRandom random = new SecureRandom();
         byte[] iv = new byte[16];
         random.nextBytes(iv);
 
         try {
-            FileOutputStream stream = new FileOutputStream("IV1.txt");
+            String dirActual = "CipherThings";
+            Path path = Paths.get("");
+            String directoryName = path.toAbsolutePath().toString();
+            directoryName+="\\"+dirActual+"\\"+"IV.txt";
+            FileOutputStream stream = new FileOutputStream(directoryName);
             stream.write(Base64.getEncoder().encode(iv));
         }
         catch(IOException e){
@@ -90,11 +91,11 @@ public class BlockCipher {
         return cypherData;
     }
 
-    static byte[] decrypt(byte[] data) throws NoSuchPaddingException, NoSuchAlgorithmException, IOException, BadPaddingException, IllegalBlockSizeException, InvalidAlgorithmParameterException, InvalidKeyException {
+    public static byte[] decrypt(byte[] data) throws NoSuchPaddingException, NoSuchAlgorithmException, IOException, BadPaddingException, IllegalBlockSizeException, InvalidAlgorithmParameterException, InvalidKeyException {
         byte[] originalData;
         SecretKey key = new SecretKeySpec(readKey(), "AES" );
 
-        byte[] ivBytes = Base64.getDecoder().decode(Files.readAllBytes(Path.of("IV1.txt")));
+        byte[] ivBytes = Base64.getDecoder().decode(Files.readAllBytes(Path.of("IV.txt")));
         IvParameterSpec iv= new IvParameterSpec(ivBytes);
 
         Cipher cipher= Cipher.getInstance("AES/CBC/PKCS5Padding");
@@ -134,6 +135,29 @@ public class BlockCipher {
         return baos.toByteArray();
     }
 
+    static void ByteToFile (byte[] bytes) {
+
+            try {
+                String dirActual = "CipherThings";
+                Path path = Paths.get("");
+                String directoryName = path.toAbsolutePath().toString();
+                directoryName+="\\"+dirActual+"\\"+"newfile.pdf";
+                writeBytesToFile(directoryName, bytes);
+
+                System.out.println("Done");
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+    }
+
+   static void writeBytesToFile(String fileOutput, byte[] bytes) throws IOException {
+            FileOutputStream fos = new FileOutputStream(fileOutput);
+            fos.write(bytes);
+            fos.close();
+    }
+
     public static void main (String[]args) throws IOException, InvalidAlgorithmParameterException, NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
         createKey();
         Scanner in = new Scanner(System.in);
@@ -142,8 +166,11 @@ public class BlockCipher {
 
         byte[] aux = encrypt(loadFile(namefile));
 
-        System.out.println("Doc:" + Arrays.toString(loadFile(namefile)));
-        System.out.println("Cipher: "+ Arrays.toString(aux));
-        System.out.println("Decipher: "+ Arrays.toString(decrypt(aux)));
+        System.out.println("Doc:");
+        System.out.println("Cipher: ");
+        System.out.println("done");
+        System.out.println("Decipher: ");
+        ByteToFile(aux);
+        System.out.println("done");
     }
 }
